@@ -1,0 +1,303 @@
+--DROP ALL TABLES TO START--
+DROP TABLE IF EXISTS detailed_rental_table;
+DROP TABLE IF EXISTS summary_rental_table;
+
+
+
+
+--PART B:  RETURN RENTAL MONTH AS AN INTEGER --
+CREATE OR REPLACE FUNCTION rental_month(rental_date TIMESTAMP)
+RETURNS INT
+LANGUAGE plpgsql
+AS
+$$
+DECLARE rental_month INT;
+BEGIN
+	SELECT EXTRACT(MONTH FROM rental_date) INTO rental_month;
+	RETURN rental_month;
+END;
+$$;
+
+
+
+--TEST FUNCTION TO SEE IF IT WORKS CORRECTLY--
+SELECT rental_month('2024-04-01');
+
+
+
+
+--PART B: RETURN RENTAL YEAR AS AN INTEGER --
+CREATE OR REPLACE FUNCTION rental_year(rental_date TIMESTAMP)
+RETURNS INT
+LANGUAGE plpgsql
+AS
+$$
+DECLARE rental_year INT;
+BEGIN
+	SELECT EXTRACT(YEAR FROM rental_date) INTO rental_year;
+	RETURN rental_year;
+END;
+$$;
+
+
+--TEST FUNCTION TO SEE IF IT WORKS CORRECTLY--
+SELECT rental_year('2024-04-01');
+
+
+
+
+
+
+
+--PART C: Create Detailed Table--
+CREATE TABLE detailed_rental_table (
+rental_id INT,
+rental_month INT,
+rental_year INT,
+store_id INT,
+title VARCHAR(255),
+category_name VARCHAR(25)
+);
+
+
+--VERIFY detailed table creation--
+SELECT * FROM detailed_rental_table;
+
+
+
+--PART D: Extract the raw data needed for the detailed table --
+INSERT INTO detailed_rental_table(
+rental_id,
+rental_month,
+rental_year,
+store_id,
+title,
+category_name
+)
+SELECT
+r.rental_id,
+rental_month(rental_date) AS rental_month,
+rental_year(rental_date) AS rental_year,
+s.store_id,
+f.title,
+c.name AS category_name
+FROM rental AS r
+LEFT JOIN inventory AS i ON  r.inventory_id = i.inventory_id
+LEFT JOIN store AS s ON i.store_id = s.store_id
+LEFT JOIN film AS f ON i.film_id = f.film_id
+LEFT JOIN film_category AS fc ON f.film_id = fc.film_id
+LEFT JOIN category AS c ON fc.category_id = c.category_id;
+
+
+
+--VERIFY that data was inserted correctly into the detailed table--
+SELECT * FROM detailed_rental_table;
+
+
+
+
+
+
+
+--PART C: Create Summary Table--
+CREATE TABLE summary_rental_table (
+rental_month INT,
+rental_year INT,
+category_name VARCHAR(25),
+total_monthly_rentals INT
+);
+
+
+--VERIFY summary table creation--
+SELECT * FROM summary_rental_table;
+
+
+
+
+
+
+--OPTIONAL - INSERT VALUES into the summary table from the DEATILED TABLE--
+INSERT INTO summary_rental_table(
+rental_month,
+rental_year,
+category_name,
+total_monthly_rentals)
+SELECT
+rental_month,
+rental_year,
+category_name,
+COUNT (rental_id) AS total_monthly_rentals
+FROM detailed_rental_table
+GROUP BY rental_year, rental_month, category_name
+ORDER BY rental_year, rental_month, category_name;
+
+
+
+--VERIFY that data was inserted correctly into the detailed table--
+SELECT * FROM summary_rental_table;
+
+
+
+
+
+
+
+
+--PART E: Create a trigger on the detailed table of the 
+--report that will continually update the summary table as 
+--data is added to the detailed table.
+CREATE OR REPLACE FUNCTION update_summary_table()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+AS $$
+BEGIN
+DELETE FROM summary_rental_table;
+INSERT INTO summary_rental_table(
+rental_month,
+rental_year,
+category_name,
+total_monthly_rentals)
+SELECT
+rental_month,
+rental_year,
+category_name,
+COUNT (rental_id) AS total_monthly_rentals
+FROM detailed_rental_table
+GROUP BY rental_year, rental_month, category_name
+ORDER BY rental_year, rental_month, category_name;
+RETURN NEW;
+END;
+$$;
+
+CREATE TRIGGER update_summary_table_trigger
+AFTER INSERT OR UPDATE OR DELETE on detailed_rental_table
+FOR EACH STATEMENT
+EXECUTE PROCEDURE update_summary_table();
+
+
+
+
+
+
+
+--VERIFY TRIGGER WORKS ON DETAILED TABLE--
+
+SELECT COUNT(*) FROM detailed_rental_table;
+SELECT COUNT(*) FROM summary_rental_table;
+
+
+
+
+INSERT INTO detailed_rental_table VALUES (
+16050,
+1,
+2006, 1,
+'TEST FILM',
+'TEST GENRE');
+
+
+
+SELECT COUNT(*) FROM detailed_rental_table;
+SELECT COUNT(*) FROM summary_rental_table;
+
+
+
+DELETE FROM detailed_rental_table WHERE rental_id = 16050;
+
+
+
+SELECT COUNT(*) FROM detailed_rental_table;
+SELECT COUNT(*) FROM summary_rental_table;
+
+
+
+
+
+
+
+
+--PART F:Provide an original stored procedure in a text 
+--format that can be used to refresh the data in both the
+--detailed table and summary table. The procedure should
+--clear the contents of the detailed table and summary table 
+--and perform the raw data extraction from part D.
+
+CREATE OR REPLACE PROCEDURE refresh_rental_tables()
+LANGUAGE plpgsql
+AS $$
+BEGIN
+--Disable trigger--
+ALTER TABLE detailed_rental_table DISABLE TRIGGER update_summary_table_trigger;
+--Clear contents of detailed and summary tables--
+TRUNCATE TABLE detailed_rental_table;
+TRUNCATE TABLE summary_rental_table;
+--Extract the raw data needed for the detailed table--
+INSERT INTO detailed_rental_table(
+rental_id,
+rental_month,
+rental_year,
+store_id,
+title,
+category_name
+)
+SELECT
+r.rental_id,
+rental_month(rental_date) AS rental_month,
+rental_year(rental_date) AS rental_year,
+s.store_id,
+f.title,
+c.name AS category_name
+FROM rental AS r
+LEFT JOIN inventory AS i ON  r.inventory_id = i.inventory_id
+LEFT JOIN store AS s ON i.store_id = s.store_id
+LEFT JOIN film AS f ON i.film_id = f.film_id
+LEFT JOIN film_category AS fc ON f.film_id = fc.film_id
+LEFT JOIN category AS c ON fc.category_id = c.category_id;
+--Extract the data needed for the summary table--
+INSERT INTO summary_rental_table(
+rental_month,
+rental_year,
+category_name,
+total_monthly_rentals)
+SELECT
+rental_month,
+rental_year,
+category_name,
+COUNT (rental_id) AS total_monthly_rentals
+FROM detailed_rental_table
+GROUP BY rental_year, rental_month, category_name
+ORDER BY rental_year, rental_month, category_name;
+--Re-enable trigger--
+ALTER TABLE detailed_rental_table ENABLE TRIGGER update_summary_table_trigger;
+RETURN;
+END;
+$$;
+
+--Execute this statement to invoke the procedure
+--refresh_rental_tables
+CALL refresh_rental_tables();
+
+
+
+
+--VERIFY THAT the tables populated from the stored procedure--
+
+select * from detailed_rental_table;
+select * from summary_rental_table;
+
+
+
+
+
+
+
+
+----------------------------------
+----------------------------------
+DROP FUNCTION rental_month;
+DROP FUNCTION rental_year;
+DROP TABLE IF EXISTS detailed_rental_table;
+DROP TABLE IF EXISTS summary_rental_table;
+
+select * from detailed_rental_table;
+select * from summary_rental_table;
