@@ -8,9 +8,7 @@ For the complete project requirements, please refer to the “Task Overview.pdf�
 
 For my complete project report, refer to “Task PA.pdf”.
 
-Here is an image of the summary table produced from the SQL Queries from “code.txt”:
-
-(The summary table includes total_monthly_rentals - this is the sum of all rental transactions for a given month and a given film category)
+Below is an image of the summary table. The summary table includes total_monthly_rentals - this is the sum of all rental transactions for a given month and a given film category.
 
 ![1](https://github.com/user-attachments/assets/107cab2a-fa08-44f5-90be-c7ad272f8c67)
 
