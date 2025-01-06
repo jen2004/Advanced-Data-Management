@@ -10,28 +10,28 @@ For my complete project report, refer to “Task PA.pdf”.
 
 Instructions to Execute SQL Queries from “code.txt” in pgAdmin 4:
 
-1.	Download and Extract the DVD Rental Database:
-o	Download the DVD rental database from Neon Tech's sample database.
-o	Extract the file to access the .sql script or the dataset.
-2.	Open pgAdmin 4:
-o	Launch the pgAdmin 4 application on your system.
-3.	Connect to Your PostgreSQL Server:
-o	In the Browser Panel (Object Explorer) on the left, expand Servers.
-o	If your server is not already connected, right-click on your server (e.g., PostgreSQL 13) and select Connect Server.
-o	Provide the necessary credentials if prompted.
-4.	Restore the DVD Rental Database:
-o	If the dvdrental database is not already available, you need to restore it:
-	Right-click Databases under your server and select Create > Database. Name it dvdrental and click Save.
-	Right-click on the newly created dvdrental database, select Restore, and upload the extracted .sql file to restore the database.
-5.	Open the Query Tool:
-o	In the Browser Panel, navigate to Servers > PostgreSQL 13 > Databases > dvdrental.
-o	Right-click on dvdrental and select Query Tool.
-6.	Execute SQL Code:
-o	Open the code.txt file.
-o	Copy and paste your desired SQL code into the Query Tool editor.
-7.	Run the SQL Code:
-o	Click the "Execute/Run" button (lightning icon) in the toolbar to execute the SQL code.
-8.	View Results:
-o	The results of your query will appear in the lower panel of the Query Tool.
+1.	Download and Extract the DVD Rental Database:<br>
+o	Download the DVD rental database from Neon Tech's sample database.<br>
+o	Extract the file to access the .sql script or the dataset.<br>
+2.	Open pgAdmin 4:<br>
+o	Launch the pgAdmin 4 application on your system.<br>
+3.	Connect to Your PostgreSQL Server:<br>
+o	In the Browser Panel (Object Explorer) on the left, expand Servers.<br>
+o	If your server is not already connected, right-click on your server (e.g., PostgreSQL 13) and select Connect Server.<br>
+o	Provide the necessary credentials if prompted.<br>
+4.	Restore the DVD Rental Database:<br>
+o	If the dvdrental database is not already available, you need to restore it:<br>
+- Right-click Databases under your server and select Create > Database. Name it dvdrental and click Save.<br>
+- Right-click on the newly created dvdrental database, select Restore, and upload the extracted .sql file to restore the database.<br>
+5.	Open the Query Tool:<br>
+o	In the Browser Panel, navigate to Servers > PostgreSQL 13 > Databases > dvdrental.<br>
+o	Right-click on dvdrental and select Query Tool.<br>
+6.	Execute SQL Code:<br>
+o	Open the code.txt file.<br>
+o	Copy and paste your desired SQL code into the Query Tool editor.<br>
+7.	Run the SQL Code:<br>
+o	Click the "Execute/Run" button (lightning icon) in the toolbar to execute the SQL code.<br>
+8.	View Results:<br>
+o	The results of your query will appear in the lower panel of the Query Tool.<br>
 
 
