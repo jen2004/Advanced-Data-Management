@@ -11,7 +11,7 @@ For my complete project report, refer to “Task PA.pdf”.
 <strong>Instructions to Execute SQL Queries from “code.txt” in pgAdmin 4:</strong>
 
 1.	Download and Extract the DVD Rental Database:<br>
-o	Download the DVD rental database from Neon Tech's sample database.<br>
+o	Download the DVD rental database: https://neon.tech/postgresql/postgresql-getting-started/postgresql-sample-database<br>
 o	Extract the file to access the .sql script or the dataset.<br>
 2.	Open pgAdmin 4:<br>
 o	Launch the pgAdmin 4 application on your system.<br>
