@@ -8,7 +8,7 @@ For the complete project requirements, please refer to the “Task Overview.pdf�
 
 For my complete project report, refer to “Task PA.pdf”.
 
-Instructions to Execute SQL Queries from “code.txt” in pgAdmin 4:
+<strong>Instructions to Execute SQL Queries from “code.txt” in pgAdmin 4:</strong>
 
 1.	Download and Extract the DVD Rental Database:<br>
 o	Download the DVD rental database from Neon Tech's sample database.<br>
