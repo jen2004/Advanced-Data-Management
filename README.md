@@ -1,5 +1,10 @@
 # Data Analysis Project for a DVD Rental Business
 
+![video](https://github.com/user-attachments/assets/1db0cedd-1800-4413-8ff1-b2294c85450b)
+
+<strong>Photo Source: Camille Cohen</strong>
+
+
 I completed this project during my 5th semester at WGU as a part of the class, Advanced Data Management, D326.
 
 For this project, I performed a comprehensive data analysis using the postgresqls sample dataset, “dvdrental”. I began by identifying a real-world business question and then designed a report comprising a detailed table for granular data and a summary table for aggregated insights. I chose the following business question for this report:  Which top three film categories had the most rentals each month? I wrote SQL queries to create these tables, selecting specific fields from relevant dataset tables and incorporating a custom transformation using a user-defined function to enhance data readability. I implemented triggers to automatically update the summary table as data was added to the detailed table and created stored procedures to refresh both tables by clearing and reloading them from raw data. 
