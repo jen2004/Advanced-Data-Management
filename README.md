@@ -1,6 +1,6 @@
 # Data Analysis Project for a DVD Rental Business
 
-![video](https://github.com/user-attachments/assets/1db0cedd-1800-4413-8ff1-b2294c85450b)
+<img src="https://github.com/user-attachments/assets/1db0cedd-1800-4413-8ff1-b2294c85450b" width="300" />
 
 <strong>Photo Source: Camille Cohen</strong>
 
